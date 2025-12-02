@@ -1,0 +1,255 @@
+/* ---------------- GLOBAL ---------------- */
+
+body {
+    background: linear-gradient(135deg, #0a0f24, #111929, #0a0e1c);
+    background-size: 400% 400%;
+    animation: bgAnimate 12s ease infinite;
+    font-family: 'Inter', sans-serif;
+    color: #fff;
+}
+
+@keyframes bgAnimate {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ---------------- CARD STYLE ---------------- */
+
+.card-box {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    border-radius: 18px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+/* Headings */
+h2, h3, h4 {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+/* ---------------- BUTTONS ---------------- */
+
+.btn-primary {
+    background: linear-gradient(135deg, #3d5af1, #5f7bff);
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    opacity: 0.9;
+}
+
+.btn-success {
+    background: #27d17f;
+    border: none;
+}
+
+.btn-warning {
+    background: #ffb54c;
+    border: none;
+}
+
+/* ---------------- INPUTS ---------------- */
+
+input, select {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #fff;
+    height: 45px;
+    border-radius: 10px;
+}
+
+/* ---------------- INPUT + SELECT (Glass Style) ---------------- */
+
+input, select, textarea {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.35);
+    color: #fff !important;
+    height: 46px;
+    padding-left: 12px;
+    border-radius: 12px;
+    transition: 0.25s ease-in-out;
+    font-size: 15px;
+}
+
+/* Placeholder color */
+input::placeholder, textarea::placeholder {
+    color: #cccccc !important;
+}
+
+/* Hover effect */
+input:hover, select:hover, textarea:hover {
+    border-color: rgba(255,255,255,0.30) !important;
+}
+
+/* Focus effect */
+input:focus, select:focus, textarea:focus {
+    outline: none !important;
+    border-color: #5f7bff !important;
+    box-shadow: 0 0 8px rgba(95,123,255,0.4);
+}
+
+
+/* ---------------- PROGRESS BAR ---------------- */
+
+.progress {
+    background: rgba(255,255,255,0.1);
+    height: 12px;
+    border-radius: 10px;
+}
+
+.progress-bar {
+    background: linear-gradient(90deg, #27d17f, #18b55c);
+}
+
+/* ---------------- GRID LAYOUT ---------------- */
+
+.row-gap {
+    row-gap: 20px;
+}
+
+/* ---------------- TIPS BOX ---------------- */
+.tip-box {
+    background: rgba(255,255,255,0.05);
+    border-left: 4px solid #5f7bff;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* ---------------- NAVBAR ---------------- */
+.navbar-custom {
+    background: rgba(255,255,255,0.06) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+
+/* Improve recurring buttons */
+.recurring-btn {
+    width: 100%;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 8px 12px;
+    transition: 0.3s ease;
+}
+
+.recurring-btn:hover {
+    transform: scale(1.03);
+}
+
+.card-box {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+}
+
+.card-box h5 {
+    color: white;
+}
+
+#recur{
+    color: white;
+}
+
+
+select {
+    background-color: #1a2332;   /* dark dropdown */
+    color: white;                /* text color */
+    border: 1px solid #334155;
+    border-radius: 8px;
+}
+
+select option {
+    background-color: #1e293b;  /* dark menu background */
+    color: white;               /* option text */
+}
+
+select option:hover {
+    background-color: #334155;  /* highlight color */
+}
+
+/* Fix for Windows highlight (blue selection) */
+select option:checked,
+select option:active {
+    background: #334155 !important;
+    color: white !important;
+}
+
+
+
+.btn-danger {
+    background:#ef4444;
+    border:none;
+}
+.btn-danger:hover {
+    background:#dc2626;
+}
+
+
+
+/* Popup background overlay */
+.overlay {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.65);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index: 9999;
+}
+
+/* Popup card */
+.confirm-card {
+    background: #1c1e26;
+    padding: 25px;
+    width: 90%;
+    max-width: 350px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    color:white;
+}
+
+.confirm-card h3 {
+    margin-bottom: 8px;
+    font-size: 20px;
+}
+
+.confirm-card p {
+    margin-bottom: 20px;
+    color: #d0d0d0;
+}
+
+.btn-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.btn-danger {
+    background:#ef4444 !important;
+    border:none;
+}
+.btn-danger:hover {
+    background:#d82c2c !important;
+}
+
+

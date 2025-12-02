@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Category Limits{% endblock %}
+
+{% block content %}
+
+<style>
+    .page-container {
+        width: 90%;
+        max-width: 900px;
+        margin: 20px auto;
+    }
+
+    .card {
+        background: rgba(255, 255, 255, 0.08) ;
+        padding: 20px;
+        margin: 15px 0;
+        border-radius: 10px;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.08);
+    }
+
+    h2, h3 {
+        color:wheat;
+    }
+
+    select, input {
+        width: 100%;
+        padding: 12px;
+        margin: 8px 0 15px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 15px;
+         background: rgba(255, 255, 255, 0.08) ;
+         color: white;
+    }
+
+    button {
+        background: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    button:hover {
+        background: #005fcc;
+    }
+
+    .limit-item {
+        margin: 10px 0;
+        padding: 10px 12px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border-left: 4px solid #007bff;
+    }
+
+    .limit-title {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 4px;
+        color: #222;
+    }
+   
+
+
+
+
+    select {
+    background-color: #1a2332;   /* dark dropdown */
+    color: white;                /* text color */
+    border: 1px solid #334155;
+    border-radius: 8px;
+}
+
+select option {
+    background-color: #1e293b;  /* dark menu background */
+    color: white;               /* option text */
+}
+
+select option:hover {
+    background-color: #334155;  /* highlight color */
+}
+
+/* Fix for Windows highlight (blue selection) */
+select option:checked,
+select option:active {
+    background: #334155 !important;
+    color: white !important;
+}
+
+</style>
+
+
+<div class="page-container">
+
+    <h2 style="text-align:center;">📊 Category Spending Limits</h2>
+
+    <!-- Add / Update Limit Form -->
+    <!-- ADD / EDIT LIMIT FORM -->
+<div class="card">
+
+    <h3>{{ edit_limit and "Update Limit" or "Add New Limit" }}</h3>
+
+    <form method="POST">
+
+        {% if edit_limit %}
+            <!-- Category LOCKED (non-editable) -->
+            <label>Category</label>
+            <input type="text" name="category"
+                   value="{{ edit_limit.category }}"
+                   class="form-control"
+                   readonly style="background:#e0e0e0;">
+            
+            <input type="hidden" name="edit_id" value="{{ edit_limit.id }}">
+        {% else %}
+            <!-- Category Editable only for NEW -->
+            <label>Category</label>
+            <select name="category" required class="form-control">
+                <option disabled selected>Select Category</option>
+                <option>Food</option>
+                <option>Books</option>
+                <option>Transport</option>
+                <option>Shopping</option>
+                <option>Phone/Internet</option>
+                <option>Medical</option>
+                <option>Health</option>
+                <option>Personal Care</option>
+                <option>Electronics</option>
+                <option>Accommodation</option>
+                <option>Tuition</option>
+                <option>Other</option>
+            </select>
+        {% endif %}
+
+        <label>Limit Amount (₹)</label>
+        <input type="number" name="amount"
+               value="{{ edit_limit.limit_amount if edit_limit else '' }}"
+               class="form-control" required>
+
+        <button type="submit" class="btn btn-primary mt-3">
+            {{ edit_limit and "Update Limit" or "Save Limit" }}
+        </button>
+
+    </form>
+</div>
+
+
+    <!-- Existing Limits -->
+    <h3>Current Limits</h3>
+
+    {% if limits %}
+        {% for l in limits %}
+            <div class="limit-item">
+                <div class="limit-title">{{ l.category }}</div>
+                <div>Monthly Limit: <b>₹{{ l.limit_amount }}</b></div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No category limits set yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

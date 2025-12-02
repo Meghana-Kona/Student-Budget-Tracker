@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #080810, #0c0f21, #060613);
+        background-size: 400% 400%;
+        animation: bgShift 12s ease infinite;
+        color: white;
+        font-family: "Inter", sans-serif;
+    }
+
+    @keyframes bgShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .page-title {
+        text-align: center;
+        margin-top: 35px;
+        font-size: 34px;
+        font-weight: 800;
+        animation: fadeUp 1s ease;
+    }
+
+    /* Fade-up animation */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(18px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chart-container {
+    width: 80%;
+    max-width: 600px;      /* Smaller */
+    padding: 18px;         /* Reduced padding */
+    margin: 25px auto;
+
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+
+    animation: fadeUp 1s ease;
+}
+
+    canvas {
+    max-height: 280px !important;   /* reduce height */
+}
+
+</style>
+
+
+<h2 class="page-title">Insights</h2>
+
+<!-- PIE CHART -->
+<div class="chart-container">
+    <h4 style="text-align:center; margin-bottom:15px;">Spending </h4>
+    <canvas id="pieChart"></canvas>
+</div>
+
+<!-- BAR CHART -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+
+<!-- Load Chart.js properly -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+    // Data from Flask
+    const categories = {{ categories|tojson }};
+    const categoryTotals = {{ totals|tojson }};
+    const days = {{ days|tojson }};
+    const dailyTotals = {{ daily_totals|tojson }};
+
+    // PIE CHART
+    new Chart(document.getElementById("pieChart"), {
+        type: "pie",
+        data: {
+            labels: categories,
+            datasets: [{
+                data: categoryTotals,
+                backgroundColor: ["#007bff", "#00d26a", "#ffcc00", "#ff4444", "#8a2be2"],
+                borderColor: "#ffffff22",
+                borderWidth: 3
+            }]
+        }
+    });
+
+   
+</script>
+
+{% endblock %}

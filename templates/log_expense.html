@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+<h2 class="text-center mb-4">Log Expense</h2>
+
+<style>
+.section-title { font-size:20px; font-weight:600; margin-bottom:10px; color:#fff; }
+.card-box { margin-bottom:25px; }
+.progress { height:12px; border-radius:12px; }
+.recent-item { padding-bottom:10px; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.13); }
+</style>
+
+<!-- 1️⃣ TOTAL ALLOWANCE + REMAINING BALANCE -->
+<div class="card-box">
+    <div class="d-flex" style="justify-content:space-between;">
+        <div>
+            <small>Total Allowance</small>
+            <h3>₹{{ total_allowance }}</h3>
+        </div>
+        <div style="text-align:right;">
+            <small>Remaining Balance</small>
+            <h3>₹{{ balance }}</h3>
+        </div>
+    </div>
+</div>
+
+<!-- 2️⃣ OVERVIEW -->
+<div class="card-box">
+    <h4 class="section-title">Overview</h4>
+
+    <div class="progress mb-2">
+        <div id="progressBar" class="progress-bar" style="width: {{ spent_percentage }}%"></div>
+    </div>
+
+    <p>Safe Daily Limit: ₹{{ safe_limit|round(2) }}</p>
+</div>
+
+<!-- 3️⃣ ADD EXPENSE -->
+<div class="card-box">
+    <h4 class="section-title">Add Expense</h4>
+
+    <form method="POST">
+
+        <input type="number" name="expense_amount" class="form-control mb-2"
+               placeholder="Amount" required>
+
+        <select name="category" class="form-control mb-2">
+            <option>Food</option>
+            <option>Transport</option>
+            <option>Shopping</option>
+            <option>Stationary</option>
+            <option>Entertainment</option>
+            <option>Other</option>
+        </select>
+
+        <input type="text" name="description"
+               class="form-control mb-2"
+               placeholder="Description (optional)">
+
+        <button class="btn btn-primary mt-2">Add Expense</button>
+    </form>
+</div>
+
+<!-- 4️⃣ UPLOAD INVOICE -->
+<div class="card-box">
+    <h4 class="section-title">Upload Invoice / Bill</h4>
+
+    <form method="POST" action="/upload_invoice" enctype="multipart/form-data">
+        <input type="file" name="invoice" class="form-control mb-2" required>
+        <button class="btn btn-warning">Scan & Prefill</button>
+    </form>
+
+    <small class="text-muted">Lightweight OCR-free bill reader.</small>
+</div>
+
+
+{% if show_invoice and invoice_items %}
+<div class="card-box" style="background:#1f1f27; padding:20px; border-radius:12px; margin-top:20px;">
+    
+    <h4 style="color:white; margin-bottom:15px;">🧾 Review Scanned Bill Items</h4>
+
+    <form method="POST" action="/add_invoice_items">
+
+        {% for item in invoice_items %}
+        <div style="background:#2a2a33; padding:15px; border-radius:10px; margin-bottom:12px;">
+
+            <label style="color:#bbb;">Item Name</label>
+            <input type="text" name="name{{ loop.index }}" value="{{ item.name }}" required>
+
+            <label style="color:#bbb;">Amount (₹)</label>
+            <input type="number" step="0.01" name="amount{{ loop.index }}" value="{{ item.amount }}" required>
+
+            <label style="color:#bbb;">Category</label>
+            <select name="category{{ loop.index }}">
+                {% for c in ["Food","Books","Transport","Shopping","Medical","Phone/Internet","Health",
+                            "Personal Care","Electronics","Accommodation","Tuition","Other"] %}
+                <option value="{{ c }}" {% if item.category == c %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+        {% endfor %}
+
+        <button class="btn btn-primary" style="width:100%; margin-top:15px;">
+            ✔ Add All Items
+        </button>
+    </form>
+
+    <form method="POST" action="/cancel_invoice" style="margin-top:10px;">
+        <button class="btn btn-danger" style="width:100%;">✖ Cancel Bill</button>
+    </form>
+
+</div>
+{% endif %}
+
+
+<!-- 5️⃣ RECENT EXPENSES -->
+<div class="card-box">
+    <div style="display:flex; align-items:center; justify-content:space-between;">
+        <h4 class="section-title" style="margin:0;">Recent Expenses</h4>
+
+        <!-- FILTER BUTTONS - TOP RIGHT -->
+        <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary filter-date" data-filter="today" style="padding:5px 10px;">Today</button>
+            <button class="btn btn-secondary filter-date" data-filter="week" style="padding:5px 10px;">Week</button>
+            <button class="btn btn-secondary filter-date" data-filter="month" style="padding:5px 10px;">Month</button>
+            <button class="btn btn-secondary filter-date" data-filter="all" style="padding:5px 10px;">All</button>
+            <form action="/clear_expenses" method="POST" onsubmit="return confirmClearAll();" style="margin:0;">
+            <button type="button" class="btn btn-danger" onclick="openClearAllPopup()">
+    Clear All
+</button>
+
+        </form>
+        </div>
+        <!-- CUSTOM CLEAR ALL CONFIRMATION POPUP -->
+<div id="confirmOverlay" class="overlay" style="display:none;">
+    <div class="confirm-card">
+        <h3>Delete All Expenses?</h3>
+        <p>This action cannot be undone.</p>
+
+        <div class="btn-row">
+            <button onclick="closePopup()" class="btn btn-secondary">Cancel</button>
+
+            <form action="/clear_expenses" method="POST" style="margin:0;">
+                <button class="btn btn-danger">Yes, Delete All</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+    </div>
+
+    <div id="expenseList" style="margin-top:15px;">
+        {% for e in expenses %}
+        <div class="recent-item expense-row"
+             data-category="{{ e.category }}"
+             data-amount="{{ e.amount }}"
+             data-date="{{ e.date }}"
+             data-text="{{ e.category }} {{ e.description }} {{ e.amount }}"
+             style="display:flex; justify-content:space-between; align-items:center;">
+
+            <!-- LEFT SIDE CONTENT -->
+            <div>
+                <strong>{{ e.category }} — ₹{{ e.amount }}</strong><br>
+                <small class="text-muted">{{ e.description }}</small><br>
+                <small>Date: {{ e.date }}</small>
+            </div>
+
+            <!-- RIGHT SIDE DELETE ICON -->
+            <form action="/delete_expense/{{ e.id }}" method="POST" style="margin:0;">
+                <button class="delete-btn" style="background:none; border:none; color:#ef4444; font-size:20px; cursor:pointer;">
+                    🗑️
+                </button>
+            </form>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+.delete-btn:hover {
+    color:#dc2626;
+}
+</style>
+
+
+
+<script>
+    
+
+function openClearAllPopup() {
+    document.getElementById("confirmOverlay").style.display = "flex";
+}
+
+function closePopup() {
+    document.getElementById("confirmOverlay").style.display = "none";
+}
+
+
+
+
+function filterExpenses() {
+    let filter = window.activeDate || "all";
+
+    document.querySelectorAll(".expense-row").forEach(row => {
+        let date = row.dataset.date;
+        let today = new Date();
+        let d = new Date(date);
+        let show = true;
+
+        if (filter === "today" && d.toDateString() !== today.toDateString()) show = false;
+        if (filter === "week" && (today - d > 7 * 24 * 60 * 60 * 1000)) show = false;
+        if (filter === "month" && d.getMonth() !== today.getMonth()) show = false;
+
+        row.style.display = show ? "flex" : "none";
+    });
+}
+
+document.querySelectorAll(".filter-date").forEach(btn => {
+    btn.addEventListener("click", () => {
+        window.activeDate = btn.dataset.filter;
+        filterExpenses();
+    });
+});
+</script>
+
+
+
+{% endblock %}

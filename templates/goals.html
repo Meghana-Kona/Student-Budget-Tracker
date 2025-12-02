@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Only show manage heading when NOT editing -->
+    {% if not edit_goal %}
+        <h2 class="text-white mb-4">Manage Goals</h2>
+    {% endif %}
+
+    <!-- ADD or UPDATE FORM -->
+    <form method="POST" class="mb-4">
+
+        {% if edit_goal %}
+            <input type="hidden" name="goal_id" value="{{ edit_goal.id }}">
+        {% endif %}
+
+        <!-- Goal Title -->
+        <input type="text" name="title"
+               value="{{ edit_goal.title if edit_goal else '' }}"
+               placeholder="Goal Title"
+               required class="form-control mb-3">
+
+        <!-- Target Amount -->
+        <input type="number" name="target_amount"
+               value="{{ edit_goal.target_amount if edit_goal else '' }}"
+               placeholder="Target Amount"
+               required class="form-control mb-3">
+
+        <!-- Initial save when adding new goal -->
+        {% if not edit_goal %}
+            <input type="number" name="initial_save"
+                   placeholder="Save amount now (optional)"
+                   class="form-control mb-3">
+        {% endif %}
+
+        <!-- Due Date (Optional) -->
+        <input type="date" name="due_date"
+               value="{{ edit_goal.due_date if edit_goal else '' }}"
+               class="form-control mb-3">
+
+        <button class="btn btn-primary">
+            {% if edit_goal %} Update Goal {% else %} Add Goal {% endif %}
+        </button>
+
+        {% if edit_goal %}
+            <a href="/home2" class="btn btn-secondary ms-2">Cancel</a>
+        {% endif %}
+    </form>
+
+    <hr style="border-color:#4b5668;">
+
+    <h4 class="text-white mb-3">Your Goals</h4>
+
+    <!-- LIST OF GOALS -->
+    {% for g in goals %}
+        <div class="rec-box" style="display:flex; justify-content:space-between;">
+
+            <div>
+                <strong class="text-white">{{ g.title }}</strong><br>
+
+                <small style="color:#9fa7b5;">
+                    Target: ₹{{ g.target_amount }} |
+                    Saved: ₹{{ g.saved_amount }} |
+                    Remaining: ₹{{ g.target_amount - g.saved_amount }}
+                </small><br>
+
+                {% if g.due_date %}
+                    <small style="color:#85adf4;">Due: {{ g.due_date }}</small>
+                {% else %}
+                    <small style="color:#6c757d;">No due date</small>
+                {% endif %}
+            </div>
+
+            <!-- HIDE EDIT/DELETE WHEN EDIT MODE -->
+            {% if not edit_goal %}
+                <div style="display:flex; gap:10px;">
+                    <a href="/goals?edit={{ g.id }}" class="edit-btn">✏️</a>
+                    <a href="/goals?delete={{ g.id }}" class="delete-btn">🗑</a>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

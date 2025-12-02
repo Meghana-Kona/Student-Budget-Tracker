@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    .review-container {
+        width: 90%;
+        max-width: 750px;
+        margin: 25px auto;
+    }
+
+    .card-box {
+        background: #1f1f27;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 18px;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.25);
+        color: white;
+    }
+
+    .item-row {
+        padding: 15px;
+        background: #2a2a33;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        border-left: 4px solid #4a90e2;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 7px;
+        border-radius: 8px;
+        border: none;
+        background: #3b3b45;
+        color: white;
+    }
+
+    input:focus, select:focus {
+        outline: 2px solid #6ab4ff;
+    }
+
+    .btn-submit {
+        background: #4a90e2;
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+
+    .btn-submit:hover {
+        background: #3277c9;
+    }
+</style>
+
+<div class="review-container">
+
+    <h2 style="text-align:center; color:white;">📄 Review Invoice Items</h2>
+    <p style="color:#bbb; text-align:center;">Modify item name, amount or category before adding.</p>
+
+    <form method="POST" action="/add_invoice_items">
+
+        {% for item in session["invoice_items"] %}
+        <div class="item-row">
+
+            <label>Item Name</label>
+            <input type="text" name="name{{ loop.index }}"
+                   value="{{ item.name }}" required>
+
+            <label>Amount (₹)</label>
+            <input type="number" step="0.01"
+                   name="amount{{ loop.index }}"
+                   value="{{ item.amount }}" required>
+
+            <label>Category</label>
+            <select name="category{{ loop.index }}">
+                <option {% if item.category == "Food" %}selected{% endif %}>Food</option>
+                <option {% if item.category == "Books" %}selected{% endif %}>Books</option>
+                <option {% if item.category == "Transport" %}selected{% endif %}>Transport</option>
+                <option {% if item.category == "Shopping" %}selected{% endif %}>Shopping</option>
+                <option {% if item.category == "Medical" %}selected{% endif %}>Medical</option>
+                <option {% if item.category == "Phone/Internet" %}selected{% endif %}>Phone/Internet</option>
+                <option {% if item.category == "Health" %}selected{% endif %}>Health</option>
+                <option {% if item.category == "Personal Care" %}selected{% endif %}>Personal Care</option>
+                <option {% if item.category == "Electronics" %}selected{% endif %}>Electronics</option>
+                <option {% if item.category == "Accommodation" %}selected{% endif %}>Accommodation</option>
+                <option {% if item.category == "Tuition" %}selected{% endif %}>Tuition</option>
+                <option {% if item.category == "Other" %}selected{% endif %}>Other</option>
+            </select>
+
+        </div>
+        {% endfor %}
+
+        <button class="btn-submit">✔ Add All Items to Expenses</button>
+    </form>
+
+</div>
+
+{% endblock %}

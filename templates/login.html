@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #080810, #0c0f21, #060613);
+        background-size: 400% 400%;
+        animation: bgShift 12s ease infinite;
+        color: white;
+        font-family: "Inter", sans-serif;
+        position: relative;
+    }
+
+    @keyframes bgShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Soft glowing blue blobby background */
+    .blur-bg {
+        position: absolute;
+        width: 330px;
+        height: 330px;
+        background: rgba(0, 123, 255, 0.25);
+        filter: blur(150px);
+        top: 25%;
+        left: 38%;
+        z-index: -1;
+    }
+
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 85vh;
+        padding: 20px;
+    }
+
+    /* Fade-up animation */
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(18px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .glass-card {
+        width: 380px;
+        padding: 38px;
+        border-radius: 20px;
+
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+
+        text-align: center;
+        animation: fadeUp 1.1s ease;
+    }
+
+    .glass-card h2 {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 12px;
+    }
+
+    /* Gradient line under heading */
+    .line {
+        width: 70px;
+        height: 3px;
+        background: linear-gradient(90deg, #007bff, #61a0ff);
+        margin: 0 auto 18px auto;
+        border-radius: 2px;
+    }
+
+    .tagline {
+        font-size: 15px;
+        opacity: 0.75;
+        margin-bottom: 28px;
+    }
+
+    /* Input Group */
+    .input-group {
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 12px 12px 12px 40px;
+        border-radius: 10px;
+        border: none;
+        outline: none;
+        background: rgba(255, 255, 255, 0.08);
+        color: white;
+        font-size: 15px;
+        transition: 0.25s;
+    }
+
+    /* Neon focus effect */
+    .input-group input:focus {
+        border: 1px solid #3a8fff;
+        box-shadow: 0 0 10px rgba(0, 136, 255, 0.45);
+    }
+
+    /* Icons inside input fields */
+    .input-group .icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.6;
+        font-size: 18px;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 12px;
+        border-radius: 10px;
+
+        background: #007bff;
+        color: white;
+        border: 1px solid rgba(0, 123, 255, 0.5);
+        box-shadow: 0 0 10px rgba(0, 123, 255, 0.35);
+
+        font-size: 17px;
+        font-weight: 600;
+        transition: 0.25s ease;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 16px rgba(0, 123, 255, 0.55);
+    }
+</style>
+
+<div class="blur-bg"></div>
+
+<div class="login-container">
+    <form class="glass-card" method="POST">
+
+        <h2>Login</h2>
+        <div class="line"></div>
+
+        <p class="tagline">Welcome back! Log in to manage your budget smartly.</p>
+         <div class="input-group">
+            <input type="text" name="name" placeholder="Enter Name" required class="form-control mb-2">
+
+         </div>
+        <div class="input-group">
+            <span class="icon">📧</span>
+            <input type="email" name="email" placeholder="Email" required>
+        </div>
+
+        <div class="input-group">
+            <span class="icon">🔒</span>
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+
+        <button class="btn-login">Login</button>
+
+        <p style="margin-top: 14px; opacity: 0.75;">
+            Don't have an account?
+            <a href="/signup" style="color:#61a0ff;">Signup</a>
+        </p>
+    </form>
+</div>
+
+{% endblock %}

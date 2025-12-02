@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 id="recur">Add Recurring Expense</h2>
+
+<div class="card-box">
+    <form method="POST">
+        <input class="form-control mt-2" name="title" placeholder="Title (ex: Netflix, Bus Pass)" required>
+
+        <input class="form-control mt-2" name="amount" type="number" placeholder="Amount" required>
+
+        <select class="form-control mt-2" name="category">
+            <option>Food</option>
+            <option>Transport</option>
+            <option>Shopping</option>
+            <option>Stationary</option>
+            <option>Entertainment</option>
+            <option>Other</option>
+        </select>
+
+        <select class="form-control mt-2" name="frequency">
+            <option value="monthly">Monthly</option>
+            <option value="weekly">Weekly</option>
+            <option value="daily">Daily</option>
+        </select>
+
+        <button class="btn btn-primary mt-3">Save Recurring</button>
+    </form>
+</div>
+
+
+
+{% endblock %}

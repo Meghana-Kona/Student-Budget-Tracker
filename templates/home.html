@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: linear-gradient(135deg, #080810, #0c0f21, #060613);
+        background-size: 400% 400%;
+        animation: bgShift 12s ease-in-out infinite;
+        color: white;
+        font-family: 'Inter', sans-serif;
+    }
+
+    @keyframes bgShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .hero-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 5%;
+        min-height: 85vh;
+    }
+
+    .hero-left {
+        flex: 1;
+        padding-right: 30px;
+    }
+
+    .hero-left h1 {
+        font-size: 42px;
+        font-weight: 800;
+        margin-bottom: 18px;
+    }
+
+    .hero-left p {
+        font-size: 18px;
+        opacity: 0.85;
+        margin-bottom: 30px;
+    }
+
+    .buttons-container {
+        display: flex;
+        gap: 15px;
+    }
+
+    .neon-btn {
+        padding: 12px 24px;
+        border-radius: 10px;
+        background: #007bff;
+        color: white;
+        border: 1px solid rgba(0, 123, 255, 0.5);
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.35);
+        font-size: 17px;
+        font-weight: 600;
+        transition: 0.25s ease;
+    }
+
+    .neon-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 14px rgba(0, 123, 255, 0.55);
+    }
+
+    .hero-right {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+
+    .hero-right img {
+        width: 85%;
+        max-width: 500px;
+        filter: drop-shadow(0 5px 25px rgba(0, 0, 0, 0.35));
+        border-radius: 12px;
+    }
+
+    @media (max-width: 900px) {
+        .hero-section {
+            flex-direction: column;
+            text-align: center;
+        }
+        .hero-left {
+            padding-right: 0;
+            margin-bottom: 30px;
+        }
+        .buttons-container {
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="hero-section">
+    <!-- LEFT TEXT -->
+    <div class="hero-left">
+        <h1>Smart Student<br>Budget Tracking</h1>
+        <p>Manage your expenses easily with an AI-powered tracker that helps you stay in control.</p>
+
+        <div class="buttons-container">
+            <a href="/login"><button class="neon-btn">Login</button></a>
+            <a href="/signup"><button class="neon-btn">Create Account</button></a>
+        </div>
+    </div>
+
+    <!-- RIGHT IMAGE -->
+    <div class="hero-right">
+        <img src="{{ url_for('static', filename='images/hero.png') }}" alt="Hero Illustration">
+
+    </div>
+</div>
+
+{% endblock %}

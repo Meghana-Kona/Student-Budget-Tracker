@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* Two-column layout */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+/* Uniform card rows */
+.rec-box {
+    padding: 15px;
+    background: #101624;
+    border-radius: 10px;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Icon button */
+.icon-btn {
+    background: #1e2a3a;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 8px;
+    color: white;
+    font-size: 18px;
+    transition: 0.2s;
+}
+.icon-btn:hover {
+    background: #263548;
+    transform: scale(1.1);
+}
+
+/* Manage button */
+.manage-btn {
+    background:#3b7bff;
+    border:none;
+    padding:6px 14px;
+    border-radius:8px;
+    color:white;
+    font-weight:600;
+    text-decoration: none;
+}
+.manage-btn:hover {
+    background:#1f5fe0;
+}
+
+/* Set button */
+.set-btn {
+    background: #3d6aff;
+    color: white;
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    border: none;
+    text-decoration: none;
+    transition: 0.2s;
+}
+.set-btn:hover {
+    background: #2c52d6;
+    transform: scale(1.05);
+}
+
+/* Edit & Delete buttons */
+.edit-btn {
+    background: #ffc107;
+    color: black;
+    padding: 6px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.25s;
+}
+.edit-btn:hover {
+    background: #e0a800;
+    transform: scale(1.12);
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.25s;
+}
+.delete-btn:hover {
+    background: #b02a37;
+    transform: scale(1.12);
+}
+</style>
+
+
+<div class="container mt-4">
+
+    <!-- Welcome -->
+    <h2 class="text-white">Welcome, {{ session.get('username', 'User') }} 👋</h2>
+    <p style="color:#9fa7b5;">Your student finance control center</p>
+
+
+    <!-- Total Allowance Box -->
+    <div class="card-box mb-4">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+
+            <div>
+                <div style="font-size:14px; color:#cfcfd6;">Total Allowance</div>
+                <div style="font-size:28px; font-weight:700; color:white;">
+                    ₹{{ total_allow }}
+                </div>
+
+                <div style="font-size:14px; color:#cfcfd6; margin-top:8px;">
+                    Remaining Balance:
+                    <span style="color:#27d17f; font-weight:600;">₹{{ balance }}</span>
+                </div>
+            </div>
+
+            <form method="POST" style="display:flex; gap:10px;">
+                <input type="number" name="allowance_amount" placeholder="Enter amount"
+                       class="form-control" style="width:150px;">
+                <button class="btn btn-success">Add</button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Recurring + Category Limits -->
+    <div class="grid-2">
+
+        <!-- Recurring Expenses -->
+        <!-- Recurring Expenses -->
+<div class="card-box mb-4">
+
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h4 class="text-white mb-0">Recurring Expenses</h4>
+        <a href="/recurring" class="set-btn">Add</a>
+    </div>
+
+    {% if recurring_preview %}
+        {% for r in recurring_preview %}
+            <div class="rec-box">
+
+                <div>
+                    <strong style="color:white; font-size:16px;">
+                        {{ r.title }} — ₹{{ r.amount }}
+                    </strong><br>
+                    <small style="color:#9fa7b5;">
+                        {{ r.category }} | {{ r.frequency }}
+                    </small>
+                </div>
+
+                <div>
+                {% if r.status == 'active' %}
+                    <a href="/pause_recurring/{{ r.id }}" class="icon-btn" title="Pause">
+                        <i class="bi bi-pause-circle"></i>
+                    </a>
+                {% else %}
+                    <a href="/resume_recurring/{{ r.id }}" class="icon-btn" title="Resume">
+                        <i class="bi bi-play-circle"></i>
+                    </a>
+                {% endif %}
+                </div>
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color:#9fa7b5;">No recurring expenses yet.</p>
+    {% endif %}
+
+</div>
+
+
+
+        <!-- Category Limits -->
+        <div class="card-box mb-4">
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h4 class="text-white mb-0">Category Limits</h4>
+                <a href="/limits" class="set-btn">Set</a>
+            </div>
+
+            {% if limits %}
+                {% for l in limits %}
+                    <div class="rec-box">
+
+                        <strong style="color:white; font-size:16px;">
+                            {{ l.category }} — ₹{{ l.limit_amount }}
+                        </strong>
+
+                        <div style="display:flex; gap:10px;">
+                            <a href="/limits?edit={{ l.id }}" class="edit-btn">✏️</a>
+                            <a href="/delete_limit/{{ l.id }}" class="delete-btn">🗑</a>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p style="color:#9fa7b5;">No limits set yet.</p>
+            {% endif %}
+        </div>
+
+    </div>
+
+
+
+    <!-- GOALS SECTION -->
+    <!-- GOALS SECTION -->
+<!-- GOALS SECTION -->
+<div class="card-box mb-5">
+    <h4 class="text-white mb-3">Your Goals</h4>
+
+    {% if goals %}
+        {% for g in goals %}
+            <div class="rec-box" style="display:flex; justify-content:space-between; align-items:center;">
+
+                <!-- Left : Goal Info -->
+                <div>
+                    <strong class="text-white" style="font-size:16px;">{{ g.title }}</strong><br>
+
+                    <small style="color:#9fa7b5;">
+                        Price: ₹{{ g.target_amount }} |
+                        Saved: ₹{{ g.saved_amount }} |
+                        Required: ₹{{ g.target_amount - g.saved_amount }}
+                    </small><br>
+
+                    {% if g.due_date %}
+                        <small style="color:#85adf4;">Due: {{ g.due_date }}</small>
+                    {% else %}
+                        <small style="color:#6c757d;">No due date</small>
+                    {% endif %}
+                </div>
+
+                <!-- Right : Edit + Delete -->
+                <div style="display:flex; gap:10px;">
+                    <a href="/goals?edit={{ g.id }}" class="edit-btn">✏️</a>
+                    <a href="/goals?delete={{ g.id }}" class="delete-btn">🗑</a>
+                </div>
+
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="color:#85adf4;">No goals yet. Add one now!</p>
+    {% endif %}
+
+    <div style="display:flex; justify-content:flex-end; margin-top:15px;">
+        <a href="/goals" class="manage-btn mt-2">Manage</a>
+    </div>
+</div>
+
+
+
+</div>
+
+{% endblock %}
